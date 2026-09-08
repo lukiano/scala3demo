@@ -100,17 +100,20 @@ class GameSpec extends munit.FunSuite:
     val board = Game.create
 
     // when
-    val result = board.moveMultiple(
-      ("A1", Player.X),
-      ("A2", Player.O),
-      ("A3", Player.X),
-      ("B1", Player.O),
-      ("B3", Player.X),
-      ("B2", Player.O),
-      ("C2", Player.X),
-      ("C3", Player.O),
-      ("C1", Player.X)
-    ).right.get
+    val result = board
+      .moveMultiple(
+        ("A1", Player.X),
+        ("A2", Player.O),
+        ("A3", Player.X),
+        ("B1", Player.O),
+        ("B3", Player.X),
+        ("B2", Player.O),
+        ("C2", Player.X),
+        ("C3", Player.O),
+        ("C1", Player.X)
+      )
+      .right
+      .get
 
     // then
     assert(clue(result.status) == GameStatus.Drawn)
@@ -119,13 +122,16 @@ class GameSpec extends munit.FunSuite:
 
   test("should disallow playing game after it's finished") {
     // given
-    val board = Game.create.moveMultiple(
-      ("A1", Player.X),
-      ("A2", Player.O),
-      ("B1", Player.X),
-      ("C3", Player.O),
-      ("C1", Player.X)
-    ).right.get
+    val board = Game.create
+      .moveMultiple(
+        ("A1", Player.X),
+        ("A2", Player.O),
+        ("B1", Player.X),
+        ("C3", Player.O),
+        ("C1", Player.X)
+      )
+      .right
+      .get
 
     // when
     val result = board.move(Coordinate(0, 2), Player.O)

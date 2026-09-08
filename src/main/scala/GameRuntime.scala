@@ -1,7 +1,7 @@
 import cats.Monad
 import cats.effect.std.Console
 
-final class GameRuntime[F[_] : Monad : Console]:
+final class GameRuntime[F[_]: Monad: Console]:
   import cats.implicits._
 
   private def readLoop(nextPlayer: Player): F[Coordinate] = for
@@ -11,7 +11,7 @@ final class GameRuntime[F[_] : Monad : Console]:
       case Some(result) => result.pure[F] // pure just wraps pure value into context of F
       case None =>
         Console[F].println("Please enter correct coordinate!") >> readLoop(nextPlayer)
-  yield result  
+  yield result
 
   private def loop(game: Game): F[Unit] = for
     _ <- Console[F].println(show"\n${game.fields}\n")
@@ -31,4 +31,4 @@ final class GameRuntime[F[_] : Monad : Console]:
   yield ()
 
   val run: F[Unit] =
-   Console[F].println("\n-- Starting a new game --\n") >> loop(Game.create)  
+    Console[F].println("\n-- Starting a new game --\n") >> loop(Game.create)

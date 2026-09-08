@@ -18,12 +18,12 @@ object Coordinate:
       case _ => None
 
   private def fromLetter(c: Char): Option[Int] = Letters.indexOf(c.toUpper.toInt) match
-      case -1 => None
-      case x => Some(x)
+    case -1 => None
+    case x => Some(x)
 
   private def fromDigit(s: Char): Option[Int] = Option
-      .when(s.isDigit)(s.asDigit - 1)
-      .filter(d => d >= 0 && d < BoardSize)
+    .when(s.isDigit)(s.asDigit - 1)
+    .filter(d => d >= 0 && d < BoardSize)
 
   given Show[Coordinate] = Show.show(c =>
     Letters.get(c.x) match {
@@ -31,4 +31,4 @@ object Coordinate:
         s"${letter.toChar}${c.y + 1}"
       case _ => "--OUT OF BOUNDS--"
     }
- )   
+  )

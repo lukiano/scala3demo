@@ -10,12 +10,6 @@ class GameRuntimeInterpretedSpec extends munit.FunSuite {
     "A3"
   )
 
-  test("Foo") {
-    val obtained = 42
-    val expected = 42
-    assertEquals(obtained, expected)
-  }
-
   test("should allow playing whole game by player X") {
     implicit val consoleMonad: ConsoleInterpreter = new ConsoleInterpreter
     implicit val comonad = new CoMonadInteract

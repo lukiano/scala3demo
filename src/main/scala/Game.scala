@@ -8,25 +8,24 @@ final case class Game(fields: Board, status: GameStatus, moves: Int):
   def move(c: Coordinate, p: Player): Either[GameError, Game] =
     status match
       case GameStatus.Won(winner) => GameError.GameIsOver(winner.some).asLeft
-      case GameStatus.Drawn       => GameError.GameIsOver(none).asLeft
-      case GameStatus.Ongoing(nextPlayer) => fields(c) match
-        case Some(FieldStatus.Empty) =>
-          if nextPlayer === p then
-            fields
-            .update(c, FieldStatus.Taken(p))
-            .map(updated =>
-              process(copy(fields = updated, moves = moves + 1), p, c)
-            )
-            .toRight(GameError.CoordinateOutOfBound(c))
-          else GameError.WrongPlayer(c, p).asLeft
-        case Some(FieldStatus.Taken(owner)) =>
-          GameError.FieldAlreadyTaken(c, owner).asLeft
-        case None => GameError.CoordinateOutOfBound(c).asLeft
+      case GameStatus.Drawn => GameError.GameIsOver(none).asLeft
+      case GameStatus.Ongoing(nextPlayer) =>
+        fields(c) match
+          case Some(FieldStatus.Empty) =>
+            if nextPlayer === p then
+              fields
+                .update(c, FieldStatus.Taken(p))
+                .map(updated => process(copy(fields = updated, moves = moves + 1), p, c))
+                .toRight(GameError.CoordinateOutOfBound(c))
+            else GameError.WrongPlayer(c, p).asLeft
+          case Some(FieldStatus.Taken(owner)) =>
+            GameError.FieldAlreadyTaken(c, owner).asLeft
+          case None => GameError.CoordinateOutOfBound(c).asLeft
 
   private def process(
-    board: Game,
-    player: Player,
-    coordinate: Coordinate
+      board: Game,
+      player: Player,
+      coordinate: Coordinate
   ): Game =
 
     // Goes in the single direction as long as it finds fields taken by the player.
@@ -50,7 +49,7 @@ final case class Game(fields: Board, status: GameStatus, moves: Int):
       count(Direction.LB, coordinate, 0) + count(Direction.RT, coordinate, 0),
       // vertical
       count(Direction.B, coordinate, 0) + count(Direction.T, coordinate, 0)
-      ).exists(_ + 1 >= BoardSize)
+    ).exists(_ + 1 >= BoardSize)
 
     if victory then board.copy(status = GameStatus.Won(player))
     else if board.moves === (BoardSize * BoardSize) then board.copy(status = GameStatus.Drawn)

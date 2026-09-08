@@ -16,11 +16,11 @@ class BoardSpec extends munit.FunSuite:
       .get
 
     val expected = """|   A B C
-                      | 1 X|X|X
-                      |   - - - 
-                      | 2 O|O|O
-                      |   - - - 
-                      | 3  | | """.stripMargin
+      | 1 X|X|X
+      |   - - - 
+      | 2 O|O|O
+      |   - - - 
+      | 3  | | """.stripMargin
 
     assert(clue(updated.show) == expected)
 

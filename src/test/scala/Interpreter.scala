@@ -1,7 +1,6 @@
-import cats.{Comonad, Show}
 import cats.effect.std.Console
 import cats.free.Free
-
+import cats.{Comonad, Show}
 import java.nio.charset.Charset
 
 sealed trait Interact[A]
@@ -12,7 +11,8 @@ case class Pure[A](a: A) extends Interact[A]
 type Interpreter[A] = Free[Interact, A]
 
 final class ConsoleInterpreter extends Console[Interpreter] {
-  override def readLineWithCharset(charset: Charset): Interpreter[String] = Free.liftF(Pure("test")) // Free.liftInject[Interpreter]
+  override def readLineWithCharset(charset: Charset): Interpreter[String] =
+    Free.liftF(Pure("test")) // Free.liftInject[Interpreter]
 
   override def print[A](a: A)(implicit S: Show[A]): Interpreter[Unit] = Free.liftF(Pure(S.show(a)))
 
@@ -27,7 +27,7 @@ final class CoMonadInteract extends Comonad[Interact] {
   override def extract[A](x: Interact[A]): A = x match
     // case Read(prompt) => prompt
     // case Print(msg) => ()
-    case Pure(a) => a  
+    case Pure(a) => a
 
   override def coflatMap[A, B](fa: Interact[A])(f: Interact[A] => B): Interact[B] = Pure(f(fa))
 
@@ -36,5 +36,3 @@ final class CoMonadInteract extends Comonad[Interact] {
     // case Read(prompt) => Read(prompt)
     // case Print(msg) => Print(msg)
 }
-
-

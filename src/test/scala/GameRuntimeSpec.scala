@@ -1,7 +1,6 @@
 import cats.effect.IO
 import cats.effect.kernel.Ref
 import munit.Assertions._
-
 import cats.effect.std.Console
 
 class GameRuntimeSpec extends munit.CatsEffectSuite:
