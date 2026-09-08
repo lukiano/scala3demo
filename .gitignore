@@ -1,0 +1,6 @@
+.bsp
+.DS_Store
+.bloop
+.metals
+.vscode
+target/

@@ -2,9 +2,9 @@ val scala3Version = "3.9.0"
 
 lazy val root = project
   .in(file("."))
+  .enablePlugins(ScalaNativePlugin)
   .settings(
     name := "scala3demo",
-    fork := true,
     version := "0.1.0-SNAPSHOT",
 
     scalaVersion := scala3Version,
