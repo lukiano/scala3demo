@@ -1,6 +1,7 @@
-import cats.free.Free
+import cats.effect.IO
+import cats.~>
 
-class GameRuntimeInterpretedSpec extends munit.FunSuite {
+class GameRuntimeInterpretedSpec extends munit.CatsEffectSuite {
 
   val VictoryX: List[String] = List(
     "A1",
@@ -12,9 +13,15 @@ class GameRuntimeInterpretedSpec extends munit.FunSuite {
 
   test("should allow playing whole game by player X") {
     implicit val consoleMonad: ConsoleInterpreter = new ConsoleInterpreter
-    implicit val comonad = new CoMonadInteract
     val execution = GameRuntime[Interpreter].run
-    execution.run
-    // assertEquals(execution.run, "\nPlayer X won the game!\n")
+    for
+      console <- TestConsole.create(VictoryX*)
+      _ <- execution.foldMap(new (Interact ~> IO) {
+        def apply[A](operation: Interact[A]): IO[A] = operation match
+          case Read(charset) => console.readLineWithCharset(charset)
+          case Print(message) => console.println(message)
+      })
+      lines <- console.printedLines
+    yield assertEquals(lines.lastOption, Some("\nPlayer X won the game!\n"))
   }
 }
